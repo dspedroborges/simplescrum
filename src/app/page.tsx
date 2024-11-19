@@ -1,9 +1,17 @@
 "use client";
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 
 export default function Home() {
+  return (
+    <Suspense>
+      <Page />
+    </Suspense>
+  )
+}
+
+function Page() {
   const searchParams = useSearchParams();
   let title = searchParams.get("title");
   let legend = searchParams.get("legend");
@@ -145,10 +153,10 @@ export default function Home() {
           </tr>
         </tfoot>
       </table>
-      
-      <p className="text-center my-4 font-bold text-2xl">Progresso: {(categories.complete.length/(categories.complete.length + categories.fridge.length + categories.emergency.length + categories.progress.length + categories.test.length)*100).toFixed(2)}%</p>
-      <p className="text-center my-4 font-bold text-2xl">Progresso com testes: {((categories.complete.length+categories.test.length)/(categories.complete.length + categories.fridge.length + categories.emergency.length + categories.progress.length + categories.test.length)*100).toFixed(2)}%</p>
-      <p className="text-center my-4 font-bold text-2xl">Perigo: {(categories.emergency.length/(categories.complete.length + categories.fridge.length + categories.emergency.length + categories.progress.length + categories.test.length)*100).toFixed(2)}%</p>
+
+      <p className="text-center my-4 font-bold text-2xl">Progresso: {(categories.complete.length / (categories.complete.length + categories.fridge.length + categories.emergency.length + categories.progress.length + categories.test.length) * 100).toFixed(2)}%</p>
+      <p className="text-center my-4 font-bold text-2xl">Progresso com testes: {((categories.complete.length + categories.test.length) / (categories.complete.length + categories.fridge.length + categories.emergency.length + categories.progress.length + categories.test.length) * 100).toFixed(2)}%</p>
+      <p className="text-center my-4 font-bold text-2xl">Perigo: {(categories.emergency.length / (categories.complete.length + categories.fridge.length + categories.emergency.length + categories.progress.length + categories.test.length) * 100).toFixed(2)}%</p>
 
       {
         showAddTask && (
