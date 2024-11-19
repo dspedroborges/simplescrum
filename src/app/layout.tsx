@@ -15,7 +15,7 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "Simple Scrum",
-  description: "Gere rapidamente um scrum compartilhável, sem a necessidade de criar conta.",
+  description: "Gere rapidamente um scrum compartilhável, sem a necessidade de criar conta. Apenas crie e compartilhe o link.",
 };
 
 export default function RootLayout({
