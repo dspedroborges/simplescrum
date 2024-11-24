@@ -78,13 +78,12 @@ function Page() {
   }
 
   return (
-    <main className="p-4 bg-gradient-to-b from-black to-gray-800 min-h-screen overflow-x-scroll">
-      <h1 className={`text-4xl sm:text-8xl lg:text-9xl font-extrabold text-white text-center my-4 ${gloriaHallelujah.className}`}>Simple Scrum</h1>
+    <main className="p-4 bg-gradient-to-b from-black to-gray-800 min-h-screen">
       <table className="mx-auto mt-8 w-full text-[8px] lg:text-base text-white">
         <thead>
           <tr>
             <th colSpan={5} className="border p-4 rounded-xl">
-              <input type="text" className="bg-black text-white text-center p-4 rounded-xl text-2xl" value={currentTitle || "Altere o título"} onChange={(e) => setCurrentTitle(e.target.value)} />
+              <input type="text" className={`bg-transparent text-white text-center rounded-xl text-2xl lg:text-6xl ${gloriaHallelujah.className}`} value={currentTitle || "Altere o título"} onChange={(e) => setCurrentTitle(e.target.value)} />
             </th>
           </tr>
           <tr>
