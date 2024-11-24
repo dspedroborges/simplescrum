@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { Gloria_Hallelujah } from "next/font/google";
 import { BsArrowLeft, BsArrowRight, BsClipboard2, BsClipboard2Check, BsPencil, BsPlusCircle, BsTrash } from 'react-icons/bs';
 
@@ -369,10 +369,7 @@ function Page() {
                   <label className="font-bold cursor-pointer" htmlFor="title">Title:</label>
                   <input type="title" name="title" id="title" className="rounded-xl p-2 border bg-black outline-blue-800" defaultValue={elementEdition.name} />
                 </div>
-                <div className="flex flex-col gap-2">
-                  <label className="font-bold cursor-pointer" htmlFor="color">Color:</label>
-                  <input type="color" name="color" id="color" className="w-full bg-black outline-blue-800 h-12 cursor-pointer hover:scale-95" defaultValue={'#' + elementEdition.color} />
-                </div>
+                <ColorPicker defaultValue={elementEdition.color} />
                 <button className="bg-blue-900 hover:bg-blue-800 rounded-full px-4 py-2 text-white w-full">Update</button>
               </form>
             </div>
@@ -397,10 +394,7 @@ function Page() {
                   <label className="font-bold cursor-pointer" htmlFor="task">Task</label>
                   <input type="text" name="task" id="task" className="rounded-xl p-2 border bg-black outline-blue-800" />
                 </div>
-                <div className="flex flex-col gap-2">
-                  <label className="font-bold cursor-pointer" htmlFor="color">Color</label>
-                  <input type="color" name="color" id="color" className="w-full bg-black outline-blue-800 h-12 cursor-pointer hover:scale-95" />
-                </div>
+                <ColorPicker />
                 <button className="bg-blue-900 hover:bg-blue-800 rounded-full px-4 py-2 text-white w-full">Add</button>
               </form>
             </div>
@@ -425,10 +419,7 @@ function Page() {
                   <label className="font-bold cursor-pointer" htmlFor="legend">Legend</label>
                   <input type="text" name="legend" id="legend" className="rounded-xl p-2 border bg-black outline-blue-800" />
                 </div>
-                <div className="flex flex-col gap-2">
-                  <label className="font-bold cursor-pointer" htmlFor="color">Color</label>
-                  <input type="color" name="color" id="color" className="w-full bg-black outline-blue-800 h-12 cursor-pointer hover:scale-95" />
-                </div>
+                <ColorPicker />
                 <button className="bg-blue-900 hover:bg-blue-800 rounded-full px-4 py-2 text-white w-full">Add</button>
               </form>
             </div>
@@ -459,7 +450,7 @@ function Legend({ name, currentCategory, rowIndex, removeElement, editElement }:
   return (
     <span className="text-center flex flex-col items-center justify-center px-16 py-2 rounded-xl text-white relative group border break-words max-w-[300px] mx-auto">
       <span className="flex gap-2 items-center">
-        <span style={{ backgroundColor: name.split(">>").length === 1 ? "#111" : '#' + name.split(">>")[0] }} className="w-4 h-4 block border"></span>
+        <span style={{ backgroundColor: name.split(">>").length === 1 ? "#111" : name.split(">>")[0] }} className="w-4 h-4 block border"></span>
         <span>{name.split(">>").length === 1 ? name.split(">>")[0] : name.split(">>")[1]}</span>
       </span>
 
@@ -487,7 +478,7 @@ function Controls({ name, currentCategory, previousCategory, nextCategory, rowIn
   const [showDelete, setShowDelete] = useState(false);
   if (name === "") return <></>;
   return (
-    <span className="text-center flex flex-col items-center justify-center px-16 py-2 rounded-xl text-white relative group border break-words max-w-[300px] mx-auto" style={{ backgroundColor: name.split(">>").length === 1 ? "#111" : '#' + name.split(">>")[0] }}>
+    <span className="text-center flex flex-col items-center justify-center px-16 py-2 rounded-xl text-white relative group border break-words max-w-[300px] mx-auto" style={{ backgroundColor: name.split(">>").length === 1 ? "#111" : name.split(">>")[0] }}>
       <span>{name.split(">>").length === 1 ? name.split(">>")[0] : name.split(">>")[1]}</span>
       <span className="absolute flex gap-2 items-center bg-black text-white p-2 rounded-xl -top-6 border -right-6 opacity-0 group-hover:opacity-100 transition-opacity">
         {
@@ -516,4 +507,46 @@ function Controls({ name, currentCategory, previousCategory, nextCategory, rowIn
       </span>
     </span>
   )
+}
+
+function ColorPicker({ defaultValue }: { defaultValue?: string }) {
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [selectedColor, setSelectedColor] = useState<string | undefined>(defaultValue);
+
+  const handleColorChange = (color: string) => {
+    setSelectedColor(color);
+    if (inputRef.current) {
+      inputRef.current.value = color;
+    }
+  };
+
+  const colors = ["purple", "goldenrod", "tomato", "darkgreen", "dodgerblue", "saddlebrown", "coral", "teal"];
+
+  return (
+    <div className="flex flex-col gap-2">
+      <label className="font-bold cursor-pointer" htmlFor="color">
+        Color:
+      </label>
+      <input
+        ref={inputRef}
+        type="text"
+        name="color"
+        id="color"
+        className="hidden"
+        defaultValue={defaultValue}
+      />
+      <div className="grid grid-cols-4 gap-2 justify-items-center">
+        {colors.map((color) => (
+          <span
+            key={color}
+            className={`hover:scale-110 cursor-pointer w-4 h-4 ${
+              selectedColor === color ? "border-2" : ""
+            }`}
+            style={{ background: color }}
+            onClick={() => handleColorChange(color)}
+          ></span>
+        ))}
+      </div>
+    </div>
+  );
 }
