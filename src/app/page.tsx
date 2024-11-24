@@ -31,7 +31,7 @@ function Page() {
   let complete = searchParams.get("complete");
   const router = useRouter();
   const [showAddTask, setShowAddTask] = useState(false);
-  const [currentTitle, setCurrentTitle] = useState(title || "Altere o título");
+  const [currentTitle, setCurrentTitle] = useState(title || "Change the title");
   const [addedClipboard, setAddedClipboard] = useState(false);
   const [showAddLegend, setShowAddLegend] = useState(false);
 
@@ -94,12 +94,12 @@ function Page() {
             </th>
           </tr>
           <tr>
-            <th className="border p-4">Legenda</th>
-            <th className="border p-4 bg-blue-800 text-white">Geladeira</th>
-            <th className="border p-4 bg-red-800 text-white">Emergência</th>
-            <th className="border p-4 bg-yellow-800 text-white">Progresso</th>
-            <th className="border p-4 bg-purple-800 text-white">Teste</th>
-            <th className="border p-4 bg-green-800 text-white">Completo</th>
+            <th className="border p-4">Legend</th>
+            <th className="border p-4 bg-blue-800 text-white">Fridge</th>
+            <th className="border p-4 bg-red-800 text-white">Emergency</th>
+            <th className="border p-4 bg-yellow-800 text-white">Progress</th>
+            <th className="border p-4 bg-purple-800 text-white">Test</th>
+            <th className="border p-4 bg-green-800 text-white">Complete</th>
           </tr>
         </thead>
         <tbody>
@@ -209,7 +209,7 @@ function Page() {
         </div>
 
         <div className="border rounded-xl my-8 pb-4">
-          <h3 className="text-white rounded-t-xl p-4 text-center text-2xl font-bold bg-blue-800">Geladeira</h3>
+          <h3 className="text-white rounded-t-xl p-4 text-center text-2xl font-bold bg-blue-800">Fridge</h3>
           {
             categories.fridge.map((elem, i) => {
               return (
@@ -229,7 +229,7 @@ function Page() {
         </div>
 
         <div className="border rounded-xl my-8 pb-4">
-          <h3 className="text-white rounded-t-xl p-4 text-center text-2xl font-bold bg-red-800">Emergência</h3>
+          <h3 className="text-white rounded-t-xl p-4 text-center text-2xl font-bold bg-red-800">Emergency</h3>
           {
             categories.emergency.map((elem, i) => {
               return (
@@ -250,7 +250,7 @@ function Page() {
         </div>
 
         <div className="border rounded-xl my-8 pb-4">
-          <h3 className="text-white rounded-t-xl p-4 text-center text-2xl font-bold bg-yellow-800">Progresso</h3>
+          <h3 className="text-white rounded-t-xl p-4 text-center text-2xl font-bold bg-yellow-800">Progress</h3>
           {
             categories.progress.map((elem, i) => {
               return (
@@ -271,7 +271,7 @@ function Page() {
         </div>
 
         <div className="border rounded-xl my-8 pb-4">
-          <h3 className="text-white rounded-t-xl p-4 text-center text-2xl font-bold bg-purple-800">Teste</h3>
+          <h3 className="text-white rounded-t-xl p-4 text-center text-2xl font-bold bg-purple-800">Test</h3>
           {
             categories.test.map((elem, i) => {
               return (
@@ -292,7 +292,7 @@ function Page() {
         </div>
 
         <div className="border rounded-xl my-8 pb-4">
-          <h3 className="text-white rounded-t-xl p-4 text-center text-2xl font-bold bg-green-800">Completo</h3>
+          <h3 className="text-white rounded-t-xl p-4 text-center text-2xl font-bold bg-green-800">Complete</h3>
           {
             categories.complete.map((elem, i) => {
               return (
@@ -314,9 +314,9 @@ function Page() {
       {/* end responsive block */}
 
       <div className="text-white border rounded-xl p-4 mt-8">
-        <p className="text-center my-4 font-bold lg:text-2xl">Progresso: {perc(categories.complete.length, (categories.complete.length + categories.fridge.length + categories.emergency.length + categories.progress.length + categories.test.length))}</p>
-        <p className="text-center my-4 font-bold lg:text-2xl">Progresso com testes: {perc((categories.complete.length + categories.test.length), (categories.complete.length + categories.fridge.length + categories.emergency.length + categories.progress.length + categories.test.length))}</p>
-        <p className="text-center my-4 font-bold lg:text-2xl">Perigo: {perc(categories.emergency.length, (categories.complete.length + categories.fridge.length + categories.emergency.length + categories.progress.length + categories.test.length))}</p>
+        <p className="text-center my-4 font-bold lg:text-2xl">Progress: {perc(categories.complete.length, (categories.complete.length + categories.fridge.length + categories.emergency.length + categories.progress.length + categories.test.length))}</p>
+        <p className="text-center my-4 font-bold lg:text-2xl">Progress with tests: {perc((categories.complete.length + categories.test.length), (categories.complete.length + categories.fridge.length + categories.emergency.length + categories.progress.length + categories.test.length))}</p>
+        <p className="text-center my-4 font-bold lg:text-2xl">Danger: {perc(categories.emergency.length, (categories.complete.length + categories.fridge.length + categories.emergency.length + categories.progress.length + categories.test.length))}</p>
       </div>
 
       {
