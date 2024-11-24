@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense, useEffect, useState } from 'react';
 import { Gloria_Hallelujah } from "next/font/google";
-import { BsArrowLeft, BsArrowRight, BsClipboard2, BsClipboard2Check, BsPlusCircle, BsTrash } from 'react-icons/bs';
+import { BsArrowLeft, BsArrowRight, BsClipboard2, BsClipboard2Check, BsPencil, BsPlusCircle, BsTrash } from 'react-icons/bs';
 
 const gloriaHallelujah = Gloria_Hallelujah({ weight: ["400"], subsets: ["latin"] });
 
@@ -34,6 +34,23 @@ function Page() {
   const [currentTitle, setCurrentTitle] = useState(title || "Change the title");
   const [addedClipboard, setAddedClipboard] = useState(false);
   const [showAddLegend, setShowAddLegend] = useState(false);
+  const [elementEdition, setElementEdition] = useState({
+    show: false,
+    category: "",
+    index: -1,
+    name: "",
+    color: "",
+  });
+
+  const editElement = (category: string, index: number) => {
+    setElementEdition({
+      show: true,
+      category,
+      index,
+      name: categories[category][index].split(">>")[1],
+      color: categories[category][index].split(">>")[0]
+    });
+  }
 
   const addToClipboard = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -49,17 +66,17 @@ function Page() {
   });
 
   useEffect(() => {
+    router.push(`?title=${currentTitle}&legend=${categories.legend.join(",")}&fridge=${categories.fridge.join(",")}&emergency=${categories.emergency.join(",")}&progress=${categories.progress.join(",")}&test=${categories.test.join(",")}&complete=${categories.complete.join(",")}`);
+  }, [categories, currentTitle]);
+
+  useEffect(() => {
     if (legend) setCategories((prev) => ({ ...prev, legend: legend.split(",") }));
     if (fridge) setCategories((prev) => ({ ...prev, fridge: fridge.split(",") }));
     if (emergency) setCategories((prev) => ({ ...prev, emergency: emergency.split(",") }));
     if (progress) setCategories((prev) => ({ ...prev, progress: progress.split(",") }));
     if (test) setCategories((prev) => ({ ...prev, test: test.split(",") }));
     if (complete) setCategories((prev) => ({ ...prev, complete: complete.split(",") }));
-  }, [fridge, emergency, progress, test, complete]);
-
-  useEffect(() => {
-    router.push(`?title=${currentTitle}&legend=${categories.legend.join(",")}&fridge=${categories.fridge.join(",")}&emergency=${categories.emergency.join(",")}&progress=${categories.progress.join(",")}&test=${categories.test.join(",")}&complete=${categories.complete.join(",")}`);
-  }, [categories, currentTitle]);
+  }, [legend, fridge, emergency, progress, test, complete]);
 
   const maxRows = Math.max(
     categories.legend.length,
@@ -121,6 +138,7 @@ function Page() {
                   rowIndex={rowIndex}
                   changeCategory={changeCategory}
                   removeElement={removeElement}
+                  editElement={editElement}
                 />
               </td>
               <td className="border p-4">
@@ -132,6 +150,7 @@ function Page() {
                   rowIndex={rowIndex}
                   changeCategory={changeCategory}
                   removeElement={removeElement}
+                  editElement={editElement}
                 />
               </td>
               <td className="border p-4">
@@ -143,6 +162,7 @@ function Page() {
                   rowIndex={rowIndex}
                   changeCategory={changeCategory}
                   removeElement={removeElement}
+                  editElement={editElement}
                 />
               </td>
               <td className="border p-4">
@@ -154,6 +174,7 @@ function Page() {
                   rowIndex={rowIndex}
                   changeCategory={changeCategory}
                   removeElement={removeElement}
+                  editElement={editElement}
                 />
               </td>
               <td className="border p-4">
@@ -164,6 +185,7 @@ function Page() {
                   rowIndex={rowIndex}
                   changeCategory={changeCategory}
                   removeElement={removeElement}
+                  editElement={editElement}
                 />
               </td>
             </tr>
@@ -223,6 +245,7 @@ function Page() {
                     rowIndex={i}
                     changeCategory={changeCategory}
                     removeElement={removeElement}
+                    editElement={editElement}
                   />
                 </div>
               )
@@ -244,6 +267,7 @@ function Page() {
                     rowIndex={i}
                     changeCategory={changeCategory}
                     removeElement={removeElement}
+                    editElement={editElement}
                   />
                 </div>
               )
@@ -265,6 +289,7 @@ function Page() {
                     rowIndex={i}
                     changeCategory={changeCategory}
                     removeElement={removeElement}
+                    editElement={editElement}
                   />
                 </div>
               )
@@ -286,6 +311,7 @@ function Page() {
                     rowIndex={i}
                     changeCategory={changeCategory}
                     removeElement={removeElement}
+                    editElement={editElement}
                   />
                 </div>
               )
@@ -306,6 +332,7 @@ function Page() {
                     rowIndex={i}
                     changeCategory={changeCategory}
                     removeElement={removeElement}
+                    editElement={editElement}
                   />
                 </div>
               )
@@ -322,6 +349,36 @@ function Page() {
       </div>
 
       {
+        elementEdition.show && (
+          <div className="bg-black bg-opacity-90 fixed top-0 left-0 h-screen w-full flex items-center justify-center" onClick={() => setElementEdition({...elementEdition, show: false})}>
+            <div className="bg-black border text-white p-4 rounded-xl" onClick={(e) => e.stopPropagation()}>
+              <form
+                action={(formData: FormData) => {
+                  const task = formData.get("task") as string;
+                  const color = formData.get("color") as string;
+                  const copy = JSON.parse(JSON.stringify(categories));
+                  copy[elementEdition.category].splice(elementEdition.index, 1, `${color.replaceAll("#", "")}>>${task}`);
+                  setCategories(copy);
+                  setElementEdition({name: "", category: "", index: -1, color: "", show: false});
+                }}
+                className="flex flex-col gap-4"
+              >
+                <div className="flex flex-col gap-2">
+                  <label className="font-bold cursor-pointer" htmlFor="task">Tarefa</label>
+                  <input type="text" name="task" id="task" className="rounded-xl p-2 border bg-black outline-blue-800" defaultValue={elementEdition.name} />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className="font-bold cursor-pointer" htmlFor="color">Cor</label>
+                  <input type="color" name="color" id="color" className="w-full bg-black outline-blue-800 h-12 cursor-pointer hover:scale-95" defaultValue={'#' + elementEdition.color} />
+                </div>
+                <button className="bg-blue-900 hover:bg-blue-800 rounded-full px-4 py-2 text-white w-full">Editar</button>
+              </form>
+            </div>
+          </div>
+        )
+      }
+
+      {
         showAddTask && (
           <div className="bg-black bg-opacity-90 fixed top-0 left-0 h-screen w-full flex items-center justify-center" onClick={() => setShowAddTask(false)}>
             <div className="bg-black border text-white p-4 rounded-xl" onClick={(e) => e.stopPropagation()}>
@@ -329,7 +386,7 @@ function Page() {
                 action={(formData: FormData) => {
                   const task = formData.get("task") as string;
                   const color = formData.get("color") as string;
-                  setCategories({ ...categories, fridge: [...categories.fridge, `${color}>>${task}`] });
+                  setCategories({ ...categories, fridge: [...categories.fridge, `${color.replaceAll("#", "")}>>${task}`] });
                   setShowAddTask(false);
                 }}
                 className="flex flex-col gap-4"
@@ -357,7 +414,7 @@ function Page() {
                 action={(formData: FormData) => {
                   const legend = formData.get("legend") as string;
                   const color = formData.get("color") as string;
-                  setCategories({ ...categories, legend: [...categories.legend, `${color}>>${legend}`] });
+                  setCategories({ ...categories, legend: [...categories.legend, `${color.replaceAll("#", "")}>>${legend}`] });
                   setShowAddLegend(false);
                 }}
                 className="flex flex-col gap-4"
@@ -407,22 +464,25 @@ function Legend({ name, currentCategory, rowIndex, removeElement }: { name: stri
   )
 }
 
-function Controls({ name, currentCategory, previousCategory, nextCategory, rowIndex, changeCategory, removeElement }: { name: string, currentCategory: string, previousCategory?: string, nextCategory?: string, rowIndex: number, changeCategory: Function, removeElement: Function }) {
+function Controls({ name, currentCategory, previousCategory, nextCategory, rowIndex, changeCategory, removeElement, editElement }: { name: string, currentCategory: string, previousCategory?: string, nextCategory?: string, rowIndex: number, changeCategory: Function, removeElement: Function, editElement: Function }) {
   if (name === "") return <></>;
   return (
-    <span className="text-center flex flex-col items-center justify-center px-16 py-2 rounded-xl text-white relative group border break-words max-w-[300px] mx-auto" style={{ backgroundColor: name.split(">>").length === 1 ? "#111" : name.split(">>")[0] }}>
+    <span className="text-center flex flex-col items-center justify-center px-16 py-2 rounded-xl text-white relative group border break-words max-w-[300px] mx-auto" style={{ backgroundColor: name.split(">>").length === 1 ? "#111" : '#' + name.split(">>")[0] }}>
       <span>{name.split(">>").length === 1 ? name.split(">>")[0] : name.split(">>")[1]}</span>
-      {
-        previousCategory && (
-          <span className="absolute top-1/2 left-2 -translate-y-1/2 hover:scale-105 cursor-pointer group-hover:opacity-100 opacity-0" onClick={() => changeCategory(currentCategory, rowIndex, previousCategory)}><BsArrowLeft /></span>
-        )
-      }
-      {
-        nextCategory && (
-          <span className="absolute top-1/2 right-2 -translate-y-1/2 hover:scale-105 cursor-pointer group-hover:opacity-100 opacity-0" onClick={() => changeCategory(currentCategory, rowIndex, nextCategory)}><BsArrowRight /></span>
-        )
-      }
-      <span className="hover:scale-105 cursor-pointer absolute top-1/2 right-8 -translate-y-1/2 group-hover:opacity-100 opacity-0" onClick={() => removeElement(currentCategory, rowIndex)}><BsTrash /></span>
+      <span className="absolute flex gap-2 items-center bg-black text-white p-2 rounded-xl -top-full right-0 opacity-0 group-hover:opacity-100 transition-opacity">
+        {
+          previousCategory && (
+            <span className="cursor-pointer hover:scale-110" onClick={() => changeCategory(currentCategory, rowIndex, previousCategory)}><BsArrowLeft /></span>
+          )
+        }
+        {
+          nextCategory && (
+            <span className="cursor-pointer hover:scale-110" onClick={() => changeCategory(currentCategory, rowIndex, nextCategory)}><BsArrowRight /></span>
+          )
+        }
+        <span className="cursor-pointer hover:scale-110" onClick={() => removeElement(currentCategory, rowIndex)}><BsTrash /></span>
+        <span className="cursor-pointer hover:scale-110" onClick={() => editElement(currentCategory, rowIndex)}><BsPencil /></span>
+      </span>
     </span>
   )
 }
