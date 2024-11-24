@@ -179,6 +179,17 @@ function Page() {
 
       {/* start responsive block */}
       <div className="lg:hidden">
+        <div className="border p-4 rounded-xl flex justify-around items-center">
+          <div className="text-center cursor-pointer text-white flex gap-2 items-center" onClick={() => setShowAddLegend(true)}>
+            <BsPlusCircle className="inline text-4xl hover:scale-95" />
+            <span>Legenda</span>
+          </div>
+          <div className="text-center cursor-pointer text-white flex gap-2 items-center" onClick={() => setShowAddTask(true)}>
+            <BsPlusCircle className="inline text-4xl hover:scale-95" />
+            <span>Tarefa</span>
+          </div>
+        </div>
+
         <div className="border rounded-xl my-8 pb-4">
           <h3 className="text-white rounded-t-xl p-4 text-center text-2xl font-bold bg-black">Legenda</h3>
           {
