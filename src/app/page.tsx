@@ -128,6 +128,7 @@ function Page() {
                   currentCategory="legend"
                   rowIndex={rowIndex}
                   removeElement={removeElement}
+                  editElement={editElement}
                 />
               </td>
               <td className="border p-4">
@@ -225,6 +226,7 @@ function Page() {
                     currentCategory="legend"
                     rowIndex={i}
                     removeElement={removeElement}
+                    editElement={editElement}
                   />
                 </div>
               )
@@ -350,28 +352,28 @@ function Page() {
 
       {
         elementEdition.show && (
-          <div className="bg-black bg-opacity-90 fixed top-0 left-0 h-screen w-full flex items-center justify-center" onClick={() => setElementEdition({...elementEdition, show: false})}>
+          <div className="bg-black bg-opacity-90 fixed top-0 left-0 h-screen w-full flex items-center justify-center" onClick={() => setElementEdition({ ...elementEdition, show: false })}>
             <div className="bg-black border text-white p-4 rounded-xl" onClick={(e) => e.stopPropagation()}>
               <form
                 action={(formData: FormData) => {
-                  const task = formData.get("task") as string;
+                  const title = formData.get("title") as string;
                   const color = formData.get("color") as string;
                   const copy = JSON.parse(JSON.stringify(categories));
-                  copy[elementEdition.category].splice(elementEdition.index, 1, `${color.replaceAll("#", "")}>>${task}`);
+                  copy[elementEdition.category].splice(elementEdition.index, 1, `${color.replaceAll("#", "")}>>${title}`);
                   setCategories(copy);
-                  setElementEdition({name: "", category: "", index: -1, color: "", show: false});
+                  setElementEdition({ name: "", category: "", index: -1, color: "", show: false });
                 }}
                 className="flex flex-col gap-4"
               >
                 <div className="flex flex-col gap-2">
-                  <label className="font-bold cursor-pointer" htmlFor="task">Tarefa</label>
-                  <input type="text" name="task" id="task" className="rounded-xl p-2 border bg-black outline-blue-800" defaultValue={elementEdition.name} />
+                  <label className="font-bold cursor-pointer" htmlFor="title">Title:</label>
+                  <input type="title" name="title" id="title" className="rounded-xl p-2 border bg-black outline-blue-800" defaultValue={elementEdition.name} />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="font-bold cursor-pointer" htmlFor="color">Cor</label>
+                  <label className="font-bold cursor-pointer" htmlFor="color">Color:</label>
                   <input type="color" name="color" id="color" className="w-full bg-black outline-blue-800 h-12 cursor-pointer hover:scale-95" defaultValue={'#' + elementEdition.color} />
                 </div>
-                <button className="bg-blue-900 hover:bg-blue-800 rounded-full px-4 py-2 text-white w-full">Editar</button>
+                <button className="bg-blue-900 hover:bg-blue-800 rounded-full px-4 py-2 text-white w-full">Update</button>
               </form>
             </div>
           </div>
@@ -392,14 +394,14 @@ function Page() {
                 className="flex flex-col gap-4"
               >
                 <div className="flex flex-col gap-2">
-                  <label className="font-bold cursor-pointer" htmlFor="task">Tarefa</label>
+                  <label className="font-bold cursor-pointer" htmlFor="task">Task</label>
                   <input type="text" name="task" id="task" className="rounded-xl p-2 border bg-black outline-blue-800" />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="font-bold cursor-pointer" htmlFor="color">Cor</label>
+                  <label className="font-bold cursor-pointer" htmlFor="color">Color</label>
                   <input type="color" name="color" id="color" className="w-full bg-black outline-blue-800 h-12 cursor-pointer hover:scale-95" />
                 </div>
-                <button className="bg-blue-900 hover:bg-blue-800 rounded-full px-4 py-2 text-white w-full">Adicionar</button>
+                <button className="bg-blue-900 hover:bg-blue-800 rounded-full px-4 py-2 text-white w-full">Add</button>
               </form>
             </div>
           </div>
@@ -420,14 +422,14 @@ function Page() {
                 className="flex flex-col gap-4"
               >
                 <div className="flex flex-col gap-2">
-                  <label className="font-bold cursor-pointer" htmlFor="legend">Legenda</label>
+                  <label className="font-bold cursor-pointer" htmlFor="legend">Legend</label>
                   <input type="text" name="legend" id="legend" className="rounded-xl p-2 border bg-black outline-blue-800" />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="font-bold cursor-pointer" htmlFor="color">Cor</label>
+                  <label className="font-bold cursor-pointer" htmlFor="color">Color</label>
                   <input type="color" name="color" id="color" className="w-full bg-black outline-blue-800 h-12 cursor-pointer hover:scale-95" />
                 </div>
-                <button className="bg-blue-900 hover:bg-blue-800 rounded-full px-4 py-2 text-white w-full">Adicionar</button>
+                <button className="bg-blue-900 hover:bg-blue-800 rounded-full px-4 py-2 text-white w-full">Add</button>
               </form>
             </div>
           </div>
@@ -436,9 +438,9 @@ function Page() {
 
       {
         addedClipboard ? (
-          <BsClipboard2Check className="fixed bottom-2 right-2 text-green-50 text-4xl hover:scale-95 cursor-pointer" />
+          <BsClipboard2Check title="URL copied to clipboard" className="fixed bottom-2 right-2 text-green-50 text-4xl hover:scale-95 cursor-pointer" />
         ) : (
-          <BsClipboard2 className="fixed bottom-2 right-2 text-white text-4xl hover:scale-95 cursor-pointer" onClick={() => {
+          <BsClipboard2 title="Copy URL to clipboard" className="fixed bottom-2 right-2 text-white text-4xl hover:scale-95 cursor-pointer" onClick={() => {
             setAddedClipboard(true);
             addToClipboard();
             setTimeout(() => {
@@ -451,20 +453,37 @@ function Page() {
   );
 }
 
-function Legend({ name, currentCategory, rowIndex, removeElement }: { name: string, currentCategory: string, rowIndex: number, removeElement: Function }) {
+function Legend({ name, currentCategory, rowIndex, removeElement, editElement }: { name: string, currentCategory: string, rowIndex: number, removeElement: Function, editElement: Function }) {
+  const [showDelete, setShowDelete] = useState(false);
   if (name === "") return <></>;
   return (
     <span className="text-center flex flex-col items-center justify-center px-16 py-2 rounded-xl text-white relative group border break-words max-w-[300px] mx-auto">
       <span className="flex gap-2 items-center">
-        <span style={{ backgroundColor: name.split(">>").length === 1 ? "#111" : name.split(">>")[0] }} className="w-4 h-4 block border"></span>
+        <span style={{ backgroundColor: name.split(">>").length === 1 ? "#111" : '#' + name.split(">>")[0] }} className="w-4 h-4 block border"></span>
         <span>{name.split(">>").length === 1 ? name.split(">>")[0] : name.split(">>")[1]}</span>
       </span>
-      <span className="hover:scale-105 cursor-pointer absolute top-1/2 right-8 -translate-y-1/2 group-hover:opacity-100 opacity-0" onClick={() => removeElement(currentCategory, rowIndex)}><BsTrash /></span>
+
+      <span className="absolute flex gap-2 items-center bg-black text-white p-2 rounded-xl -top-full right-0 opacity-0 group-hover:opacity-100 transition-opacity">
+        {
+          showDelete ? (
+            <span className="cursor-pointer hover:scale-110 text-red-500" onClick={() => removeElement(currentCategory, rowIndex)}><BsTrash /></span>
+          ) : (
+            <span className="cursor-pointer hover:scale-110" onClick={() => {
+              setShowDelete(true);
+              setTimeout(() => {
+                setShowDelete(false);
+              }, 2000);
+            }}><BsTrash /></span>
+          )
+        }        <span className="cursor-pointer hover:scale-110" onClick={() => editElement(currentCategory, rowIndex)}><BsPencil /></span>
+      </span>
+
     </span>
   )
 }
 
 function Controls({ name, currentCategory, previousCategory, nextCategory, rowIndex, changeCategory, removeElement, editElement }: { name: string, currentCategory: string, previousCategory?: string, nextCategory?: string, rowIndex: number, changeCategory: Function, removeElement: Function, editElement: Function }) {
+  const [showDelete, setShowDelete] = useState(false);
   if (name === "") return <></>;
   return (
     <span className="text-center flex flex-col items-center justify-center px-16 py-2 rounded-xl text-white relative group border break-words max-w-[300px] mx-auto" style={{ backgroundColor: name.split(">>").length === 1 ? "#111" : '#' + name.split(">>")[0] }}>
@@ -480,7 +499,18 @@ function Controls({ name, currentCategory, previousCategory, nextCategory, rowIn
             <span className="cursor-pointer hover:scale-110" onClick={() => changeCategory(currentCategory, rowIndex, nextCategory)}><BsArrowRight /></span>
           )
         }
-        <span className="cursor-pointer hover:scale-110" onClick={() => removeElement(currentCategory, rowIndex)}><BsTrash /></span>
+        {
+          showDelete ? (
+            <span className="cursor-pointer hover:scale-110 text-red-500" onClick={() => removeElement(currentCategory, rowIndex)}><BsTrash /></span>
+          ) : (
+            <span className="cursor-pointer hover:scale-110" onClick={() => {
+              setShowDelete(true);
+              setTimeout(() => {
+                setShowDelete(false);
+              }, 2000);
+            }}><BsTrash /></span>
+          )
+        }
         <span className="cursor-pointer hover:scale-110" onClick={() => editElement(currentCategory, rowIndex)}><BsPencil /></span>
       </span>
     </span>
