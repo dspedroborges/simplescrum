@@ -475,7 +475,8 @@ function Legend({ name, currentCategory, rowIndex, removeElement, editElement }:
               }, 2000);
             }}><BsTrash /></span>
           )
-        }        <span className="cursor-pointer hover:scale-110" onClick={() => editElement(currentCategory, rowIndex)}><BsPencil /></span>
+        }
+        <span className="cursor-pointer hover:scale-110" onClick={() => editElement(currentCategory, rowIndex)}><BsPencil /></span>
       </span>
 
     </span>
@@ -488,7 +489,7 @@ function Controls({ name, currentCategory, previousCategory, nextCategory, rowIn
   return (
     <span className="text-center flex flex-col items-center justify-center px-16 py-2 rounded-xl text-white relative group border break-words max-w-[300px] mx-auto" style={{ backgroundColor: name.split(">>").length === 1 ? "#111" : '#' + name.split(">>")[0] }}>
       <span>{name.split(">>").length === 1 ? name.split(">>")[0] : name.split(">>")[1]}</span>
-      <span className="absolute flex gap-2 items-center bg-black text-white p-2 rounded-xl -top-full right-0 opacity-0 group-hover:opacity-100 transition-opacity">
+      <span className="absolute flex gap-2 items-center bg-black text-white p-2 rounded-xl -top-6 border -right-6 opacity-0 group-hover:opacity-100 transition-opacity">
         {
           previousCategory && (
             <span className="cursor-pointer hover:scale-110" onClick={() => changeCategory(currentCategory, rowIndex, previousCategory)}><BsArrowLeft /></span>
