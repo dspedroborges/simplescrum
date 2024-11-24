@@ -2,6 +2,15 @@
 
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense, useEffect, useState } from 'react';
+import { Gloria_Hallelujah } from "next/font/google";
+import { BsArrowLeft, BsArrowRight, BsPlusCircle, BsTrash } from 'react-icons/bs';
+
+const gloriaHallelujah = Gloria_Hallelujah({ weight: ["400"], subsets: ["latin"] });
+
+const perc = (part: number, whole: number) => {
+  if (isNaN(part/whole)) return "0%";
+  return `${((part/whole)*100).toFixed(2)}%`;
+}
 
 export default function Home() {
   return (
@@ -69,12 +78,13 @@ function Page() {
   }
 
   return (
-    <>
-      <table className="mx-auto mt-8">
+    <main className="p-4 bg-gradient-to-b from-black to-gray-800 min-h-screen overflow-x-scroll">
+      <h1 className={`text-4xl sm:text-8xl lg:text-9xl font-extrabold text-white text-center my-4 ${gloriaHallelujah.className}`}>Simple Scrum</h1>
+      <table className="mx-auto mt-8 w-full text-[8px] lg:text-base text-white">
         <thead>
           <tr>
-            <th colSpan={5} className="border p-4">
-              <input type="text" value={currentTitle || "Altere o título"} onChange={(e) => setCurrentTitle(e.target.value)} className="text-center" />
+            <th colSpan={5} className="border p-4 rounded-xl">
+              <input type="text" className="bg-black text-white text-center p-4 rounded-xl text-2xl" value={currentTitle || "Altere o título"} onChange={(e) => setCurrentTitle(e.target.value)} />
             </th>
           </tr>
           <tr>
@@ -149,19 +159,21 @@ function Page() {
         <tfoot>
           <tr>
             {/* <td className="border p-4">Adicionar</td> */}
-            <td colSpan={6} className="text-center border p-4 cursor-pointer" onClick={() => setShowAddTask(true)}>➕</td>
+            <td colSpan={6} className="text-center border p-4 cursor-pointer" onClick={() => setShowAddTask(true)}><BsPlusCircle className="inline text-4xl hover:scale-95" /></td>
           </tr>
         </tfoot>
       </table>
 
-      <p className="text-center my-4 font-bold text-2xl">Progresso: {(categories.complete.length / (categories.complete.length + categories.fridge.length + categories.emergency.length + categories.progress.length + categories.test.length) * 100).toFixed(2)}%</p>
-      <p className="text-center my-4 font-bold text-2xl">Progresso com testes: {((categories.complete.length + categories.test.length) / (categories.complete.length + categories.fridge.length + categories.emergency.length + categories.progress.length + categories.test.length) * 100).toFixed(2)}%</p>
-      <p className="text-center my-4 font-bold text-2xl">Perigo: {(categories.emergency.length / (categories.complete.length + categories.fridge.length + categories.emergency.length + categories.progress.length + categories.test.length) * 100).toFixed(2)}%</p>
+      <div className="text-white border rounded-xl p-4 mt-8">
+        <p className="text-center my-4 font-bold lg:text-2xl">Progresso: {perc(categories.complete.length, (categories.complete.length + categories.fridge.length + categories.emergency.length + categories.progress.length + categories.test.length))}</p>
+        <p className="text-center my-4 font-bold lg:text-2xl">Progresso com testes: {perc((categories.complete.length + categories.test.length), (categories.complete.length + categories.fridge.length + categories.emergency.length + categories.progress.length + categories.test.length))}</p>
+        <p className="text-center my-4 font-bold lg:text-2xl">Perigo: {perc(categories.emergency.length, (categories.complete.length + categories.fridge.length + categories.emergency.length + categories.progress.length + categories.test.length))}</p>
+      </div>
 
       {
         showAddTask && (
-          <div className="bg-black bg-opacity-80 fixed top-0 left-0 h-screen w-full flex items-center justify-center" onClick={() => setShowAddTask(false)}>
-            <div className="bg-white p-4 rounded-xl" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-black bg-opacity-90 fixed top-0 left-0 h-screen w-full flex items-center justify-center" onClick={() => setShowAddTask(false)}>
+            <div className="bg-black border text-white p-4 rounded-xl" onClick={(e) => e.stopPropagation()}>
               <form
                 action={(formData: FormData) => {
                   const task = formData.get("task") as string;
@@ -172,7 +184,7 @@ function Page() {
               >
                 <div className="flex flex-col gap-2">
                   <label className="font-bold cursor-pointer" htmlFor="task">Tarefa</label>
-                  <input type="text" name="task" id="task" className="rounded-xl p-2 border outline-blue-800" />
+                  <input type="text" name="task" id="task" className="rounded-xl p-2 border bg-black border outline-blue-800" />
                 </div>
                 <button className="bg-blue-900 hover:bg-blue-800 rounded-full px-4 py-2 text-white w-full">Adicionar</button>
               </form>
@@ -193,28 +205,26 @@ function Page() {
         <button className="bg-blue-900 hover:bg-blue-800 rounded-full px-4 py-2 text-white">Adicionar</button>
       </form> */}
 
-    </>
+    </main>
   );
 }
 
 function Controls({ name, color, currentCategory, previousCategory, nextCategory, rowIndex, changeCategory, removeElement }: { name: string, color?: string, currentCategory: string, previousCategory?: string, nextCategory?: string, rowIndex: number, changeCategory: Function, removeElement: Function }) {
   if (name === "") return <></>;
   return (
-    <span className="text-center flex flex-col items-center justify-center p-2 rounded-xl" style={{ backgroundColor: color ? color : "#eee" }}>
+    <span className="text-center flex flex-col items-center justify-center px-16 py-2 rounded-xl text-white relative group border break-words max-w-[300px] mx-auto" style={{ backgroundColor: color ? color : "#000" }}>
       <span>{name}</span>
-      <span className="flex gap-2">
-        {
-          previousCategory && (
-            <span className="hover:scale-105 cursor-pointer" onClick={() => changeCategory(currentCategory, rowIndex, previousCategory)}>⬅️</span>
-          )
-        }
-        {
-          nextCategory && (
-            <span className="hover:scale-105 cursor-pointer" onClick={() => changeCategory(currentCategory, rowIndex, nextCategory)}>➡️</span>
-          )
-        }
-        <span className="hover:scale-105 cursor-pointer" onClick={() => removeElement(currentCategory, rowIndex)}>🗑️</span>
-      </span>
+      {
+        previousCategory && (
+          <span className="absolute top-1/2 left-2 -translate-y-1/2 hover:scale-105 cursor-pointer group-hover:opacity-100 opacity-0" onClick={() => changeCategory(currentCategory, rowIndex, previousCategory)}><BsArrowLeft /></span>
+        )
+      }
+      {
+        nextCategory && (
+          <span className="absolute top-1/2 right-2 -translate-y-1/2 hover:scale-105 cursor-pointer group-hover:opacity-100 opacity-0" onClick={() => changeCategory(currentCategory, rowIndex, nextCategory)}><BsArrowRight /></span>
+        )
+      }
+      <span className="hover:scale-105 cursor-pointer absolute top-1/2 right-8 -translate-y-1/2 group-hover:opacity-100 opacity-0" onClick={() => removeElement(currentCategory, rowIndex)}><BsTrash /></span>
     </span>
   )
 }
