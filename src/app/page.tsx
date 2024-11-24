@@ -111,12 +111,12 @@ function Page() {
             </th>
           </tr>
           <tr>
-            <th className="border p-4">Legend</th>
-            <th className="border p-4 bg-blue-800 text-white">Fridge</th>
-            <th className="border p-4 bg-red-800 text-white">Emergency</th>
-            <th className="border p-4 bg-yellow-800 text-white">Progress</th>
-            <th className="border p-4 bg-purple-800 text-white">Test</th>
-            <th className="border p-4 bg-green-800 text-white">Complete</th>
+            <th className="border p-4 bg-gray-800 hover:brightness-125">Legend</th>
+            <th className="border p-4 bg-blue-800 text-white hover:brightness-125">Fridge</th>
+            <th className="border p-4 bg-red-800 text-white hover:brightness-125">Emergency</th>
+            <th className="border p-4 bg-yellow-800 text-white hover:brightness-125">Progress</th>
+            <th className="border p-4 bg-purple-800 text-white hover:brightness-125">Test</th>
+            <th className="border p-4 bg-green-800 text-white hover:brightness-125">Complete</th>
           </tr>
         </thead>
         <tbody>
@@ -448,7 +448,7 @@ function Legend({ name, currentCategory, rowIndex, removeElement, editElement }:
   const [showDelete, setShowDelete] = useState(false);
   if (name === "") return <></>;
   return (
-    <span className="text-center flex flex-col items-center justify-center px-16 py-2 rounded-xl text-white relative group border break-words max-w-[300px] mx-auto">
+    <span className="text-center flex flex-col items-center justify-center text-white relative group break-words hover:outline cursor-pointer mx-auto max-w-[250px]">
       <span className="flex gap-2 items-center">
         <span style={{ backgroundColor: name.split(">>").length === 1 ? "#111" : name.split(">>")[0] }} className="w-4 h-4 block border"></span>
         <span>{name.split(">>").length === 1 ? name.split(">>")[0] : name.split(">>")[1]}</span>
