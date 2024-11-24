@@ -179,6 +179,8 @@ function Page() {
 
       {/* start responsive block */}
       <div className="lg:hidden">
+        <input type="text" className={`bg-transparent text-white text-center rounded-xl text-3xl lg:text-6xl mx-auto block mt-4 mb-8 ${gloriaHallelujah.className}`} value={currentTitle} onChange={(e) => setCurrentTitle(e.target.value)} />
+
         <div className="border p-4 rounded-xl flex justify-around items-center">
           <div className="text-center cursor-pointer text-white flex gap-2 items-center" onClick={() => setShowAddLegend(true)}>
             <BsPlusCircle className="inline text-4xl hover:scale-95" />
