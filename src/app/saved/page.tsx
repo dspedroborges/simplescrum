@@ -39,8 +39,8 @@ export default function Page() {
                             <div key={i} className="group flex items-center gap-8">
                                 <Link className="hover:scale-90 flex items-center gap-4" href={u.url} key={i}>
                                     {u.title}
-                                    <span className="text-xs h-4 w-4 rounded-full flex items-center justify-center bg-green-600 text-white p-4">{u.progress}%</span>
-                                    <span className="text-xs">{u.lastUpdate}</span>
+                                    <span className="text-xs rounded-full flex items-center justify-center bg-green-600 text-white p-2">{u.progress}%</span>
+                                    <span className="text-xs rounded-full flex items-center justify-center bg-blue-600 text-white p-2">{u.lastUpdate}</span>
                                 </Link>
                                 {
                                     showDelete ? (
