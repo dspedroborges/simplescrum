@@ -23,9 +23,7 @@ const saveURL = (title: string, url: string, progress: number) => {
   }
 
   if (index !== -1) {
-    if (progress > urls[index].progress) {
-      urls[index] = { ...urls[index], url, progress, lastUpdate: new Date().toLocaleDateString() }
-    }
+    urls[index] = { ...urls[index], url, progress, lastUpdate: new Date().toLocaleDateString() };
   } else {
     urls.push({
       title,
