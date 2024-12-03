@@ -8,8 +8,36 @@ import { BsArrowLeft, BsArrowRight, BsClipboard2, BsClipboard2Check, BsPencil, B
 const gloriaHallelujah = Gloria_Hallelujah({ weight: ["400"], subsets: ["latin"] });
 
 const perc = (part: number, whole: number) => {
-  if (isNaN(part / whole)) return "0%";
-  return `${((part / whole) * 100).toFixed(2)}%`;
+  if (isNaN(part / whole)) return 0;
+  return Number(((part / whole) * 100).toFixed(2));
+}
+
+const saveURL = (title: string, url: string, progress: number) => {
+  let urls = JSON.parse(localStorage.getItem("urls") || "[]");
+  let index = -1;
+  for (let i = 0; i < urls.length; i++) {
+    if (urls[i].title === title) {
+      index = i;
+      break;
+    }
+  }
+
+  if (index !== -1) {
+    if (progress > urls[index].progress) {
+      urls[index] = { ...urls[index], url, progress, lastUpdate: new Date().toLocaleDateString() }
+    }
+  } else {
+    urls.push({
+      title,
+      url,
+      progress,
+      lastUpdate: new Date().toLocaleDateString()
+    });
+  }
+
+  if (title !== "null" && title !== "Change the title") {
+    localStorage.setItem("urls", JSON.stringify(urls));
+  }
 }
 
 export default function Home() {
@@ -70,13 +98,17 @@ function Page() {
   }, [categories, currentTitle]);
 
   useEffect(() => {
+    saveURL(String(title), window.location.href, perc(categories.complete.length, (categories.complete.length + categories.fridge.length + categories.emergency.length + categories.progress.length + categories.test.length)));
+  }, [legend, fridge, emergency, progress, test, complete]);
+
+  useEffect(() => {
     if (legend) setCategories((prev) => ({ ...prev, legend: legend.split(",") }));
     if (fridge) setCategories((prev) => ({ ...prev, fridge: fridge.split(",") }));
     if (emergency) setCategories((prev) => ({ ...prev, emergency: emergency.split(",") }));
     if (progress) setCategories((prev) => ({ ...prev, progress: progress.split(",") }));
     if (test) setCategories((prev) => ({ ...prev, test: test.split(",") }));
     if (complete) setCategories((prev) => ({ ...prev, complete: complete.split(",") }));
-  }, [legend, fridge, emergency, progress, test, complete]);
+  }, [title, legend, fridge, emergency, progress, test, complete]);
 
   const maxRows = Math.max(
     categories.legend.length,
@@ -102,7 +134,7 @@ function Page() {
   }
 
   return (
-    <main className="p-4 bg-gradient-to-b from-black to-gray-800 min-h-screen">
+    <main>
       <table className="hidden lg:table mx-auto mt-8 w-full text-[8px] lg:text-base text-white">
         <thead>
           <tr>
@@ -539,9 +571,8 @@ function ColorPicker({ defaultValue }: { defaultValue?: string }) {
         {colors.map((color) => (
           <span
             key={color}
-            className={`hover:scale-110 cursor-pointer w-4 h-4 ${
-              selectedColor === color ? "border-2" : ""
-            }`}
+            className={`hover:scale-110 cursor-pointer w-4 h-4 ${selectedColor === color ? "border-2" : ""
+              }`}
             style={{ background: color }}
             onClick={() => handleColorChange(color)}
           ></span>
