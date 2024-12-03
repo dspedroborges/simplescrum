@@ -96,8 +96,9 @@ function Page() {
   }, [categories, currentTitle]);
 
   useEffect(() => {
+    console.log('Perc: ' + perc(categories.complete.length, (categories.complete.length + categories.fridge.length + categories.emergency.length + categories.progress.length + categories.test.length)))
     saveURL(String(title), window.location.href, perc(categories.complete.length, (categories.complete.length + categories.fridge.length + categories.emergency.length + categories.progress.length + categories.test.length)));
-  }, [legend, fridge, emergency, progress, test, complete]);
+  }, [categories]);
 
   useEffect(() => {
     if (legend) setCategories((prev) => ({ ...prev, legend: legend.split(",") }));
