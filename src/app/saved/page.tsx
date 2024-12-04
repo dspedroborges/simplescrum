@@ -25,8 +25,8 @@ export default function Page() {
 
         if (index === -1) return;
 
-        urls.splice(index, 1);
-        localStorage.setItem("urls", JSON.stringify(urls));
+        lsUrls.splice(index, 1);
+        localStorage.setItem("urls", JSON.stringify(lsUrls));
         location.reload();
     }
 
