@@ -376,9 +376,9 @@ function Page() {
       {/* end responsive block */}
 
       <div className="text-white border rounded-xl p-4 mt-8">
-        <p className="text-center my-4 font-bold lg:text-2xl">Progress: {perc(categories.complete.length, (categories.complete.length + categories.fridge.length + categories.emergency.length + categories.progress.length + categories.test.length))}</p>
-        <p className="text-center my-4 font-bold lg:text-2xl">Progress with tests: {perc((categories.complete.length + categories.test.length), (categories.complete.length + categories.fridge.length + categories.emergency.length + categories.progress.length + categories.test.length))}</p>
-        <p className="text-center my-4 font-bold lg:text-2xl">Danger: {perc(categories.emergency.length, (categories.complete.length + categories.fridge.length + categories.emergency.length + categories.progress.length + categories.test.length))}</p>
+        <p className="text-center my-4 font-bold lg:text-2xl">Progress: {perc(categories.complete.length, (categories.complete.length + categories.fridge.length + categories.emergency.length + categories.progress.length + categories.test.length))}%</p>
+        <p className="text-center my-4 font-bold lg:text-2xl">Progress with tests: {perc((categories.complete.length + categories.test.length), (categories.complete.length + categories.fridge.length + categories.emergency.length + categories.progress.length + categories.test.length))}%</p>
+        <p className="text-center my-4 font-bold lg:text-2xl">Danger: {perc(categories.emergency.length, (categories.complete.length + categories.fridge.length + categories.emergency.length + categories.progress.length + categories.test.length))}%</p>
       </div>
 
       {
