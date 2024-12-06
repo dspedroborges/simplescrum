@@ -96,7 +96,6 @@ function Page() {
   }, [categories, currentTitle]);
 
   useEffect(() => {
-    console.log('Perc: ' + perc(categories.complete.length, (categories.complete.length + categories.fridge.length + categories.emergency.length + categories.progress.length + categories.test.length)))
     saveURL(String(title), window.location.href, perc(categories.complete.length, (categories.complete.length + categories.fridge.length + categories.emergency.length + categories.progress.length + categories.test.length)));
   }, [categories]);
 
@@ -551,7 +550,7 @@ function ColorPicker({ defaultValue }: { defaultValue?: string }) {
     }
   };
 
-  const colors = ["purple", "goldenrod", "tomato", "darkgreen", "dodgerblue", "saddlebrown", "coral", "teal"];
+  const colors = ["indigo", "darkred", "darkgreen", "dodgerblue", "darkblue", "saddlebrown", "grey", "black"];
 
   return (
     <div className="flex flex-col gap-2">
